@@ -15,7 +15,11 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(SocketAddr::from(([0, 0, 0, 0], port)))
         .await
         .unwrap_or_else(|e| panic!("port {port}: {e}"));
-    eprintln!("horizon-mod-registry: listening on {port}, submitting to {repo}");
+    eprintln!(
+        "horizon-mod-registry: listening on {port}, submitting to {repo}, built from {}, serving shader API {}",
+        horizon_mod_registry::build_commit(),
+        horizon_mod_registry::SHADER_API
+    );
     let app = App::new(config).unwrap_or_else(|e| panic!("horizon-mod-registry: {e}"));
     axum::serve(listener, router(app))
         .with_graceful_shutdown(async {
